@@ -3,9 +3,19 @@ import gleam/string
 import gleam/string_builder.{type StringBuilder}
 import reader.{type Reader}
 
+/// A Builder provides an initial accumulator, a fold function for calculating
+/// intermediate values, and a final function for calculating a final value.
+///
+/// Its purpose is to allow us to build up a value while parsing, and then
+/// calculate the final value once parsing is complete.
 pub type Builder(value, accum, result) =
   #(accum, fn(accum, value) -> accum, fn(accum) -> result)
 
+/// A Parser is a function that takes a Reader and returns a Result.
+/// 
+/// The result includes the state of the reader, regardless of whether it is
+/// successful or not. This allows us to subsequent parsers to continue from
+/// where a previous or failed parser left off.
 pub type Parser(input, result) =
   fn(Reader(input)) -> Result(#(result, Reader(input)), Reader(input))
 
